@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+
+.content{
+  align-self:center;
+  align-content: center;
+  border-radius: 5%;
+  box-shadow: 10px 10px;
+  background-color: #1ccdca;
+}

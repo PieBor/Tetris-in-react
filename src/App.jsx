@@ -25,12 +25,17 @@ const App = () => {
     }
   };
 
+  const handleGameEnd = (finalScore) => {
+    updateHighScores(finalScore);
+    setTimeout(() => setShowHighScores(true), 2000); // Wait 2 seconds before showing high scores
+  };
+
   return (
-    <div>
+    <div className="content">
       {showHighScores ? (
         <HighScores highScores={highScores} startGame={startGame} />
       ) : (
-        <TetrisGame onGameEnd={updateHighScores} />
+        <TetrisGame onGameEnd={handleGameEnd} />
       )}
     </div>
   );
