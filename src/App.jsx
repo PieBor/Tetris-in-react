@@ -1,21 +1,39 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from "react";
+import HighScores from "./components/HighScores";
+import TetrisGame from "./components/TetrisGame";
 
-import './App.css'
-import Header from './header.jsx'
-import Content from './content.jsx'
-import Footer from './footer.jsx'
+const App = () => {
+  const [showHighScores, setShowHighScores] = useState(true);
+  const [highScores, setHighScores] = useState([]);
+  const [socket, setSocket] = useState(null);
 
-function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8080");
+    ws.onmessage = (message) => {
+      setHighScores(JSON.parse(message.data));
+    };
+    setSocket(ws);
+
+    return () => ws.close();
+  }, []);
+
+  const startGame = () => setShowHighScores(false);
+
+  const updateHighScores = (newScore) => {
+    if (socket) {
+      socket.send(JSON.stringify({ score: newScore }));
+    }
+  };
 
   return (
-    <>
-    <Header></Header>
-    <Content></Content>
-    <Footer></Footer>
-      
-    </>
-  )
-}
+    <div>
+      {showHighScores ? (
+        <HighScores highScores={highScores} startGame={startGame} />
+      ) : (
+        <TetrisGame onGameEnd={updateHighScores} />
+      )}
+    </div>
+  );
+};
 
-export default App
+export default App;
